@@ -1,0 +1,156 @@
+<div class="vh-100 bg-dark">
+  <h2 id="page-heading" style="margin-left: 10%; font-weight: bold">
+    <span>Eventos</span>
+
+    <a
+      *ngIf="accountService.hasAnyAuthority('ROLE_ADMIN')"
+      style="display: block"
+      class="h4"
+      [routerLink]="['/event', 'dashboards', 'global']"
+      >Ver dashboard global</a
+    >
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="ticketyApp.event.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-event"
+        [routerLink]="['/event/new']"
+        *ngIf="!accountService.hasAnyAuthority(['ROLE_ADMIN'])"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Crear nuevo Evento </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="events?.length === 0">
+    <span>Ningún Evento encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities tickety-table" id="entities" *ngIf="events && events.length > 0">
+    <table class="table tickety-table" aria-describedby="page-heading" style="margin-top: 20px; margin-bottom: 30px">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th class="text-center" scope="col">
+            <div class="d-flex text-center">
+              <span>Fecha</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex text-center">
+              <span>Estado</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex text-center">
+              <span>Tickets</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex text-center">
+              <span>Precio</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex text-center">
+              <span>Nombre</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex text-center">
+              <span>Descripción</span>
+            </div>
+          </th>
+
+          <th scope="col" class="text-center">
+            <div class="d-flex">
+              <span>Dirección</span>
+            </div>
+          </th>
+          <th scope="col" class="text-center">
+            <div class="d-flex">
+              <span>Dashboards</span>
+            </div>
+          </th>
+          <th class="text-center" scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events; trackBy: trackId" data-cy="entityTable">
+          <td class="text-center">{{ event.date | formatMediumDate }}</td>
+          <td class="text-center" jhiTranslate="{{ 'ticketyApp.EventSatus.' + event.eventSatus }}">{{ event.eventSatus }}</td>
+          <td class="text-center">{{ event.talTickets }}</td>
+          <td class="text-center">{{ event.eventPrice }}</td>
+          <td class="text-center">{{ event.eventName }}</td>
+          <td class="text-center">{{ event.eventDescription }}</td>
+          <td class="text-center">
+            <div *ngIf="event.venue">
+              <a *ngIf="accountService.hasAnyAuthority('ROLE_ADMIN'); else elseBlock" [routerLink]="['/venue', event.venue.id, 'view']">{{
+                event.venue.name
+              }}</a>
+              <ng-template #elseBlock>
+                {{ event.venue.name }}
+              </ng-template>
+            </div>
+          </td>
+
+          <td class="text-center">
+            <a [routerLink]="['/event', event.id, 'dashboards']">Dashboards</a>
+          </td>
+
+          <td class="text-center">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/event', event.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/event', event.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+                *ngIf="!accountService.hasAnyAuthority(['ROLE_ADMIN'])"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+
+              <button type="submit" (click)="delete(event)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-end" style="margin-bottom: 130px; margin-right: 30px">
+      <button
+        id="jh-create-entity-foto"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-event"
+        [routerLink]="['/photo/new']"
+        *ngIf="!accountService.hasAnyAuthority(['ROLE_ADMIN'])"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Agregar foto </span>
+      </button>
+    </div>
+  </div>
+</div>

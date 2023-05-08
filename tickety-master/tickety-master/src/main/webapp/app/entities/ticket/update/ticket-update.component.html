@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <div>
+        <div class="">
+          <div class="ml-4">
+            <strong><label class="form-label ml-1">Precio por unidad : ₡</label></strong> <span>{{ currentPrice }}</span>
+          </div>
+          <div class="mb6-l">
+            <fa-icon class="fa-1x" icon="circle-plus" (click)="addticket()"></fa-icon>
+            <span>{{ ticketCount }}</span>
+            <fa-icon class="fa-1x" icon="circle-minus" (click)="subtractticket()"></fa-icon>
+          </div>
+        </div>
+
+        <table class="table table-hover table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Zona</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>General</th>
+              <td>{{ ticketCount }}</td>
+              <td>₡ {{ totalPay }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <span jhiTranslate="entity.action.cancel" [mat-dialog-close]="false">Cancelar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-center vh-100 bg-dark">
+  <div class="col-8">
+    <div *ngIf="user">
+      <h2 style="margin-top: 5%">
+        <span>Perfil de </span> <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+      </h2>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="userManagement.firstName">Nombre</span></dt>
+        <dd>{{ user.firstName }}</dd>
+
+        <dt><span jhiTranslate="userManagement.lastName">Apellidos</span></dt>
+        <dd>{{ user.lastName }}</dd>
+
+        <dt><span jhiTranslate="userManagement.email">Email</span></dt>
+        <dd>{{ user.email }}</dd>
+
+        <dt><span>Fecha de creación</span></dt>
+        <dd>{{ user.createdDate | date: 'dd/MM/yyyy' }}</dd>
+
+        <dt><span>Roles</span></dt>
+        <dd>
+          <ul class="list-unstyled">
+            <li *ngFor="let authority of user.authorities">
+              <span class="badge bg-info">{{ authority }}</span>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>
